@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PilpelKatom.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CharacterController : ControllerBase
 {
     private readonly ICharacterService _characterService;
-    
+
     public CharacterController(ICharacterService characterService)
     {
         _characterService = characterService;
@@ -32,13 +34,11 @@ public class CharacterController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> UpdateCharacter(UpdateCharacterDto updatedCharacter)
+    public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> UpdateCharacter(
+        UpdateCharacterDto updatedCharacter)
     {
         var response = await _characterService.UpdateCharacter(updatedCharacter);
-        if (response.Data is null)
-        {
-            return NotFound(response);
-        }
+        if (response.Data is null) return NotFound(response);
         return Ok(response);
     }
 
@@ -46,10 +46,7 @@ public class CharacterController : ControllerBase
     public async Task<ActionResult<ServiceResponse<GetCharacterDto>>> DeleteCharacter(int id)
     {
         var response = await _characterService.DeleteCharacter(id);
-        if (response.Data is null)
-        {
-            return NotFound(response);
-        }
+        if (response.Data is null) return NotFound(response);
         return Ok(response);
     }
 }

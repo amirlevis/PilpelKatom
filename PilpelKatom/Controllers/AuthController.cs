@@ -3,6 +3,7 @@ using PilpelKatom.Data;
 using PilpelKatom.Dtos.User;
 
 namespace PilpelKatom.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
@@ -21,24 +22,17 @@ public class AuthController : ControllerBase
         {
             Username = request.Username
         }, request.Password);
-        if (!response.Success)
-        {
-            return BadRequest(response);
-        }
+        if (!response.Success) return BadRequest(response);
 
         return Ok(response);
     }
-    
+
     [HttpPost("login")]
     public async Task<ActionResult<ServiceResponse<int>>> Login(UserLoginDto request)
     {
-        var response = await _authRepository.Login(request.Username,request.Password);
-        if (!response.Success)
-        {
-            return BadRequest(response);
-        }
+        var response = await _authRepository.Login(request.Username, request.Password);
+        if (!response.Success) return BadRequest(response);
 
         return Ok(response);
     }
-    
 }

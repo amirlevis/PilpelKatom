@@ -1,6 +1,6 @@
 ﻿namespace PilpelKatom.Services.SuperHeroService;
 
-public class SuperHeroService: ISuperHeroService
+public class SuperHeroService : ISuperHeroService
 {
     private readonly DataContext _context;
     private readonly IMapper _mapper;
@@ -10,8 +10,8 @@ public class SuperHeroService: ISuperHeroService
         _context = context;
         _mapper = mapper;
     }
-    
-    
+
+
     public async Task<ServiceResponse<List<GetSuperHeroDto>>> GetAllHeroes()
     {
         var serviceResponse = new ServiceResponse<List<GetSuperHeroDto>>
@@ -39,7 +39,6 @@ public class SuperHeroService: ISuperHeroService
         var serviceResponse = new ServiceResponse<GetSuperHeroDto>();
         try
         {
-            
             var result = await _context.SuperHeroes.AddAsync(_mapper.Map<SuperHero>(hero));
             await _context.SaveChangesAsync();
             serviceResponse.Data = _mapper.Map<GetSuperHeroDto>(result.Entity);
@@ -68,6 +67,7 @@ public class SuperHeroService: ISuperHeroService
                 superHero.Place = request.Place;
                 await _context.SaveChangesAsync();
             }
+
             serviceResponse.Data = _mapper.Map<GetSuperHeroDto>(superHero);
             serviceResponse.Success = superHero is not null;
             serviceResponse.Message = superHero is not null ? "" : "Hero was not found";
@@ -78,6 +78,7 @@ public class SuperHeroService: ISuperHeroService
             serviceResponse.Success = false;
             serviceResponse.Message = e.Message;
         }
+
         return serviceResponse;
     }
 
@@ -93,7 +94,9 @@ public class SuperHeroService: ISuperHeroService
                 await _context.SaveChangesAsync();
             }
 
-            serviceResponse.Data = superHero is not null ? _mapper.Map<List<GetSuperHeroDto>>(await _context.SuperHeroes.ToListAsync()) : null;
+            serviceResponse.Data = superHero is not null
+                ? _mapper.Map<List<GetSuperHeroDto>>(await _context.SuperHeroes.ToListAsync())
+                : null;
             serviceResponse.Success = superHero is not null;
             serviceResponse.Message = superHero is not null ? "" : "Hero was not found";
         }
@@ -103,6 +106,7 @@ public class SuperHeroService: ISuperHeroService
             serviceResponse.Success = false;
             serviceResponse.Message = e.Message;
         }
+
         return serviceResponse;
     }
 }
